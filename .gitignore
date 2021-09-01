@@ -1,3 +1,4 @@
 build/
 dist/
-yatts.egg-info/
+*.egg-info/
+__pycache__/

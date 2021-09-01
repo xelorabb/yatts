@@ -24,5 +24,7 @@ def style(
   italic=False,
   underline=False,
   striketrough=False
-)
+):
 ```
+#### Color Palette
+![color palette](https://raw.githubusercontent.com/xelorabb/yatts/master/color_palette.png)
