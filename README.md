@@ -1,5 +1,9 @@
 ## YATTS - Yet Another Terminal Text Styler
 
+![PyPI](https://img.shields.io/pypi/v/yatts)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/yatts)
+![GitHub](https://img.shields.io/github/license/xelorabb/yatts)
+
 Styles terminal text
 
 #### Examples
@@ -8,7 +12,7 @@ Styles terminal text
 print(style("yatts", ['green', 'dark']))
 
 # Prints yatts with red text color and dark yellow background
-print(style("yatts", 'red', ['yello', 'dark']))
+print(style("yatts", 'red', ['yellow', 'dark']))
 
 # Prints yatts with white text color, blue background and italic text style
 print(style("yatts", bgcolor='blue', italic=True))

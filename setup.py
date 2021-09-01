@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 NAME = 'yatts'
-VERSION = '0.0.2'
+VERSION = '0.0.3'
 INSTALL_REQUIRES = []
 DESCRIPTION = 'Styles terminal text'
 LONG_DESCRIPTION_CONTENT_TYPE = 'text/markdown'
