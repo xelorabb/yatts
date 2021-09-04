@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 NAME = 'yatts'
-VERSION = '0.0.3'
+VERSION = '0.0.4'
 INSTALL_REQUIRES = []
 DESCRIPTION = 'Styles terminal text'
 LONG_DESCRIPTION_CONTENT_TYPE = 'text/markdown'
@@ -21,6 +21,7 @@ PACKAGE_DIR = {'': 'src'}
 AUTHOR = 'xelorabb'
 EMAIL = 'xelorabb@gmail.com'
 URL = 'https://github.com/xelorabb/yatts'
+LICENSE = 'MIT'
 
 # Setting up
 setup(
@@ -36,5 +37,6 @@ setup(
     keywords=KEYWORDS,
     classifiers=CLASSIFIERS,
     py_modules=PY_MODULES,
-    package_dir=PACKAGE_DIR
+    package_dir=PACKAGE_DIR,
+    license=LICENSE
 )

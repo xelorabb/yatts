@@ -31,7 +31,15 @@ def style(text, color='white', bgcolor=None,
         get_color_code(bgcolor, True) if not bgcolor is None else None
     ]
 
-    return '\033[' + ';'.join(filter(None,codes)) + 'm' + text + '\033[0m'
+    res = None
+    code_list = ';'.join(filter(None,codes))
+
+    if not code_list == '':
+        res = '\033[' + code_list + 'm' + text + '\033[0m'
+    else:
+        res = text
+
+    return res
 
 def get_color_code(color, isbgcolor=False):
     c = None
@@ -40,7 +48,9 @@ def get_color_code(color, isbgcolor=False):
         c = COLORS[color][2 if isbgcolor else 0]
 
     elif type(color) is list:
-        if len(color) >= 2 and color[0] in COLORS:
+        if len(color) == 1 and color[0] in COLORS:
+            c = COLORS[color[0]][2 if isbgcolor else 0]
+        elif len(color) >= 2 and color[0] in COLORS:
             if type(color[1]) is str and color[1] == 'dark':
                 c = COLORS[color[0]][3 if isbgcolor else 1]
             else:

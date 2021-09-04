@@ -1,1 +1,4 @@
 include *.png
+
+# added by check-manifest
+recursive-include src *.py
