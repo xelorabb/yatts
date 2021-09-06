@@ -9,7 +9,7 @@ Styles terminal text
 #### Install
 `pip install yatts`
 
-#### Examples
+#### 4-Bit Color Examples
 ```python
 from yatts import style
 
@@ -21,20 +21,55 @@ print(style('yatts', 'red', ['yellow', 'dark']))
 
 # Prints yatts with white text color, blue background and italic text style
 print(style('yatts', bgcolor='blue', italic=True))
+
+# Prints a bold, italic, overlined yatts
+print(style('yatts', decorations=['bold', 'italic', 'overline']))
 ```
+
+#### 8-Bit Color Examples
+```python
+from yatts import style
+
+yatts = ' yatts '*10
+
+# Dark green text color
+print(style(yatts, 2) + '\n')
+
+# Light red text color with light orange background color
+print(style(yatts, 196, 223) + '\n')
+
+# 4-Bit and 8-Bit colors mixed and bold parameter
+# combined with decorations parameter
+print(style(yatts, 'white', 238, bold=True,
+            decorations=['underline','overline']))
+
+```
+![8bit examples](https://raw.githubusercontent.com/xelorabb/yatts/master/img/8bit_examples.png)
 
 #### Function Arguments
 ```python
 def style(
   text,
-  color='white',
+  color=None,
   bgcolor=None,
   bold=False,
   italic=False,
   underline=False,
-  striketrough=False
+  striketrough=False,
+  decorations=None
 ):
 ```
+**All valid strings for `decorations`:**
+* `'bold'`
+* `'blink'`
+* `'italic'`
+* `'overline'`
+* `'underline'`
+* `'striketrough'`
+* `'double_underline'`
 
-#### Color Palette
-![color palette](https://raw.githubusercontent.com/xelorabb/yatts/master/color_palette.png)
+#### 4-Bit Color Palette
+![4bit color palette](https://raw.githubusercontent.com/xelorabb/yatts/master/img/4bit_color_palette.png)
+
+#### 8-Bit Color Palette
+![8bit color palette](https://raw.githubusercontent.com/xelorabb/yatts/master/img/8bit_color_palette.png)
