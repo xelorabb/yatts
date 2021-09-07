@@ -104,6 +104,17 @@ def _get_4bit_color_code(color, isbgcolor=False):
 
     return c
 
+def remove_all(text):
+    start, end = _check_escape_sequence(text)
+
+    if start:
+        text = text[text.find('m')+1:]
+
+    if end:
+        text = text[:-4]
+
+    return text
+
 def _get_8bit_color_code(color, isbgcolor=False):
     c = None
 
@@ -114,3 +125,6 @@ def _get_8bit_color_code(color, isbgcolor=False):
 
 def _is_numeric(c):
     return isinstance(c, (int, float)) and not isinstance(c, bool)
+
+def _check_escape_sequence(text):
+    return text.startswith('\33['), text.endswith('\33[0m')

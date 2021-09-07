@@ -1,4 +1,4 @@
-from yatts import style
+from yatts import *
 
 def test_style_color_red():
     assert style('yatts', 'red') == '\033[91myatts\033[0m'
@@ -38,3 +38,7 @@ def test_style_8bit_color_light_red_bgcolor_light_orange():
 
 def test_style_decorations_list_empty():
     assert style('yatts', decorations=[]) == 'yatts'
+
+def test_remove_all():
+    text = style('yatts', 1)
+    assert remove_all(text) == 'yatts'
