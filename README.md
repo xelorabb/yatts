@@ -47,7 +47,9 @@ print(style(yatts, 'white', 238, bold=True,
 ![8bit examples](https://raw.githubusercontent.com/xelorabb/yatts/master/img/8bit_examples.png)
 
 #### Function Arguments
+##### Style Function
 ```python
+# Styles a text
 def style(
   text,
   color=None,
@@ -60,6 +62,26 @@ def style(
 ):
 ```
 **All valid strings for `decorations`:**
+* `'bold'`
+* `'blink'`
+* `'italic'`
+* `'overline'`
+* `'underline'`
+* `'striketrough'`
+* `'double_underline'`
+
+##### Remove Functions
+```python
+# Removes one or more specific style from a styled text
+def remove(text, style):
+
+# Removes all styles from a styled text
+def remove_all(text):
+```
+
+**All valid strings for `style`:**
+* `'color'`
+* `'bgcolor'`
 * `'bold'`
 * `'blink'`
 * `'italic'`

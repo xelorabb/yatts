@@ -42,3 +42,15 @@ def test_style_decorations_list_empty():
 def test_remove_all():
     text = style('yatts', 1)
     assert remove_all(text) == 'yatts'
+
+def test_remove_style():
+    text = style('yatts', 'black', underline=True)
+    assert remove(text, 'underline') == '\033[30myatts\033[0m'
+
+def test_remove_multiple_styles():
+    text = style('yatts', 1, 2, decorations=['bold', 'italic'])
+    assert remove(text, ['bgcolor', 'italic']) == '\033[1;38;5;1myatts\033[0m'
+
+def text_remove_style_nothing_left():
+    text = style('yatts', italic=True)
+    assert remove(text, 'italic') == 'yatts'

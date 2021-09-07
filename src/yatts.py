@@ -24,6 +24,7 @@ DECORATIONS = {
     'overline': '53'
 }
 
+# Styles a text
 def style(text, color=None, bgcolor=None,
         bold=False, italic=False, underline=False, striketrough=False,
         decorations=None):
@@ -66,16 +67,40 @@ def style(text, color=None, bgcolor=None,
                     codes.append(DECORATIONS[deco])
 
     # Create output string
-    res = None
-    code_list = ';'.join(filter(None,codes))
+    return _create_output_string(text, codes)
 
-    if not code_list == '':
-        res = '\033[' + code_list + 'm' + text + '\033[0m'
-    else:
-        res = text
+# Removes one or more specific style from a styled text
+def remove(text, style):
+    start, end = _check_escape_sequence(text)
+    codes = []
 
-    return res
+    if start and end:
+        m = text.find('m')
+        codes = text[2:m].split(';')
+        codes = _combine_8bit_color_to_str(codes, '38')
+        codes = _combine_8bit_color_to_str(codes, '48')
 
+        if type(style) is str:
+            codes = _remove_style_codes(style, codes)
+        elif type(style) is list:
+            for s in style:
+                codes = _remove_style_codes(s, codes)
+
+    return _create_output_string(text, codes)
+
+# Removes all styles from a styled text
+def remove_all(text):
+    start, end = _check_escape_sequence(text)
+
+    if start:
+        text = text[text.find('m')+1:]
+
+    if end:
+        text = text[:-4]
+
+    return text
+
+# Returns 4-Bit or 8-Bit color or bgcolor code
 def get_color_code(color, isbgcolor=False):
     code = None
 
@@ -87,6 +112,19 @@ def get_color_code(color, isbgcolor=False):
 
     return code
 
+# Creates the full styled output string
+def _create_output_string(text, codes):
+    res = None
+    code_list = ';'.join(filter(None,codes))
+
+    if not code_list == '':
+        res = '\033[' + code_list + 'm' + remove_all(text) + '\033[0m'
+    else:
+        res = remove_all(text)
+
+    return res
+
+# Return 4-Bit color or bgcolor code
 def _get_4bit_color_code(color, isbgcolor=False):
     c = None
 
@@ -104,17 +142,7 @@ def _get_4bit_color_code(color, isbgcolor=False):
 
     return c
 
-def remove_all(text):
-    start, end = _check_escape_sequence(text)
-
-    if start:
-        text = text[text.find('m')+1:]
-
-    if end:
-        text = text[:-4]
-
-    return text
-
+# Return 8-Bit color or bgcolor code
 def _get_8bit_color_code(color, isbgcolor=False):
     c = None
 
@@ -123,8 +151,52 @@ def _get_8bit_color_code(color, isbgcolor=False):
 
     return c
 
+# Combines the 8-Bit color or bgcolor values to one string
+def _combine_8bit_color_to_str(codes, n):
+    if n in codes:
+        n = codes.index(n)
+        temp = ';'.join(codes[n:n+3])
+        del codes[n:n+3]
+        codes.append(temp)
+
+    return codes
+
+# Removes any style from code list
+def _remove_style_codes(style, codes):
+    if style in DECORATIONS and DECORATIONS[style] in codes:
+        codes.remove(DECORATIONS[style])
+    elif style == 'color':
+        codes = _remove_color_codes(codes)
+    elif style == 'bgcolor':
+        codes = _remove_color_codes(codes, True)
+
+    return codes
+
+# Removes 4-Bit oder 8-Bit color or bgcolor from code list
+def _remove_color_codes(codes, isbgcolor=False):
+    color_range = list(range(30,38)) + list(range(90,98))
+    color_code_8bit = '38'
+
+    if isbgcolor:
+        color_range = list(range(40,48)) + list(range(100,108))
+        color_code_8bit = '48'
+
+    color_code = [x for x in codes if x.startswith(color_code_8bit)]
+
+    if not color_code == []:
+        codes.remove(''.join(color_code))
+    else:
+        dup = map(str, codes + color_range)
+        seen = set()
+        uniq = [x for x in dup if x in seen or seen.add(x)]
+        codes = [x for x in codes if x not in uniq]
+
+    return codes
+
+# Checks if parameter c is numeric
 def _is_numeric(c):
     return isinstance(c, (int, float)) and not isinstance(c, bool)
 
+# Checks if the text parameter starts and ends with a escape sequence
 def _check_escape_sequence(text):
     return text.startswith('\33['), text.endswith('\33[0m')
