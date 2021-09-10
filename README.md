@@ -46,6 +46,27 @@ print(style(yatts, 'white', 238, bold=True,
 ```
 ![8bit examples](https://raw.githubusercontent.com/xelorabb/yatts/master/img/8bit_examples.png)
 
+#### Add/Remove Examples
+```python
+from yatts import *
+
+yatts = ' yatts '*10
+
+yatts = style(yatts, 'blue', 235, decorations=['italic', 'underline'])
+print(yatts + '\n')
+
+yatts = add(yatts, 'bold')
+print(yatts + '\n')
+
+yatts = remove(yatts, ['color', 'underline'])
+print(yatts + '\n')
+
+yatts = remove_all(yatts)
+print(yatts)
+
+```
+![add remove examples](https://raw.githubusercontent.com/xelorabb/yatts/master/img/add_remove_examples.png)
+
 #### Function Arguments
 ##### Style Function
 ```python
@@ -69,6 +90,12 @@ def style(
 * `'underline'`
 * `'striketrough'`
 * `'double_underline'`
+
+##### Add Function
+```python
+# Adds a specific style to a text
+def add(text, style, value=None):
+```
 
 ##### Remove Functions
 ```python

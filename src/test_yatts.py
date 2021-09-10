@@ -51,6 +51,21 @@ def test_remove_multiple_styles():
     text = style('yatts', 1, 2, decorations=['bold', 'italic'])
     assert remove(text, ['bgcolor', 'italic']) == '\033[1;38;5;1myatts\033[0m'
 
-def text_remove_style_nothing_left():
+def test_remove_style_nothing_left():
     text = style('yatts', italic=True)
     assert remove(text, 'italic') == 'yatts'
+
+def test_add_decoration():
+    text = style('yatts', 'red')
+    assert add(text, 'bold') == '\033[91;1myatts\033[0m'
+
+def test_add_color():
+    text = style('yatts', bgcolor=4)
+    assert add(text, 'color', 'black') == '\033[48;5;4;30myatts\033[0m'
+
+def test_add_bgcolor_update():
+    text = style('yatts', bgcolor='cyan')
+    assert add(text, 'bgcolor', 16) == '\033[48;5;16myatts\033[0m'
+
+def test_add_to_unstyled_text():
+    assert add('yatts', 'underline') == '\033[4myatts\033[0m'

@@ -69,16 +69,30 @@ def style(text, color=None, bgcolor=None,
     # Create output string
     return _create_output_string(text, codes)
 
+# Adds a specific style to a text
+def add(text, style, value=None):
+    start, end = _check_escape_sequence(text)
+    codes = []
+
+    if not start or not end:
+        text = '\033[m' + remove_all(text) + '\033[0m'
+        start = True; end = True
+
+    if start and end:
+        codes = _get_all_style_codes(text, codes)
+
+        if type(style) is str:
+            codes = _add_style_code(style, value, codes)
+
+    return _create_output_string(text, codes)
+
 # Removes one or more specific style from a styled text
 def remove(text, style):
     start, end = _check_escape_sequence(text)
     codes = []
 
     if start and end:
-        m = text.find('m')
-        codes = text[2:m].split(';')
-        codes = _combine_8bit_color_to_str(codes, '38')
-        codes = _combine_8bit_color_to_str(codes, '48')
+        codes = _get_all_style_codes(text, codes)
 
         if type(style) is str:
             codes = _remove_style_codes(style, codes)
@@ -161,6 +175,28 @@ def _combine_8bit_color_to_str(codes, n):
 
     return codes
 
+# Finds color or bgcolor code in code list
+def _find_color_code(codes, isbgcolor=False):
+    color_range = list(range(30,38)) + list(range(90,98))
+    color_code_8bit = '38'
+
+    if isbgcolor:
+        color_range = list(range(40,48)) + list(range(100,108))
+        color_code_8bit = '48'
+
+    color_code = [x for x in codes if x.startswith(color_code_8bit)]
+
+    return color_code, color_range
+
+# Returns all style codes in a list
+def _get_all_style_codes(text, codes):
+    m = text.find('m')
+    codes = text[2:m].split(';')
+    codes = _combine_8bit_color_to_str(codes, '38')
+    codes = _combine_8bit_color_to_str(codes, '48')
+
+    return codes
+
 # Removes any style from code list
 def _remove_style_codes(style, codes):
     if style in DECORATIONS and DECORATIONS[style] in codes:
@@ -172,16 +208,9 @@ def _remove_style_codes(style, codes):
 
     return codes
 
-# Removes 4-Bit oder 8-Bit color or bgcolor from code list
+# Removes 4-Bit or 8-Bit color or bgcolor from code list
 def _remove_color_codes(codes, isbgcolor=False):
-    color_range = list(range(30,38)) + list(range(90,98))
-    color_code_8bit = '38'
-
-    if isbgcolor:
-        color_range = list(range(40,48)) + list(range(100,108))
-        color_code_8bit = '48'
-
-    color_code = [x for x in codes if x.startswith(color_code_8bit)]
+    color_code, color_range = _find_color_code(codes, isbgcolor)
 
     if not color_code == []:
         codes.remove(''.join(color_code))
@@ -190,6 +219,30 @@ def _remove_color_codes(codes, isbgcolor=False):
         seen = set()
         uniq = [x for x in dup if x in seen or seen.add(x)]
         codes = [x for x in codes if x not in uniq]
+
+    return codes
+
+# Adds any style to code list
+def _add_style_code(style, value, codes):
+    if style in DECORATIONS and not DECORATIONS[style] in codes:
+        codes.append(DECORATIONS[style])
+    elif style == 'color':
+        codes = _update_color_code(codes, value)
+    elif style == 'bgcolor':
+        codes = _update_color_code(codes, value, True)
+
+    return codes
+
+# Adds or updates 4-Bit or 8-Bit color or bgcolor to code list
+def _update_color_code(codes, value, isbgcolor=False):
+    color_code = _find_color_code(codes, isbgcolor)
+
+    if not color_code == []:
+        codes = _remove_color_codes(codes, isbgcolor)
+        codes.append(get_color_code(value, isbgcolor))
+    else:
+        codes = _remove_color_codes(codes, isbgcolor)
+        codes.append(get_color_code(value, isbgcolor))
 
     return codes
 
